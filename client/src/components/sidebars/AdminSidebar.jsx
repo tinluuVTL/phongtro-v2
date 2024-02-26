@@ -1,11 +1,11 @@
 import React from "react"
 import { UserInformation } from "../user"
-import { managerSidebar } from "~/utilities/constant"
+import { adminSidebar } from "~/utilities/constant"
 import { NavLink } from "react-router-dom"
 import { twMerge } from "tailwind-merge"
 import clsx from "clsx"
 
-const ManagerSidebar = ({ setIsShowMenu }) => {
+const AdminSidebar = ({ setIsShowMenu }) => {
   return (
     <div className="flex flex-col bg-blue-700 text-white h-full justify-between">
       <div className="flex flex-col">
@@ -14,7 +14,7 @@ const ManagerSidebar = ({ setIsShowMenu }) => {
           onClick={() => setIsShowMenu && setIsShowMenu(false)}
           className="mt-6"
         >
-          {managerSidebar.map((el) => (
+          {adminSidebar.map((el) => (
             <NavLink
               className={({ isActive }) =>
                 twMerge(
@@ -37,4 +37,4 @@ const ManagerSidebar = ({ setIsShowMenu }) => {
   )
 }
 
-export default ManagerSidebar
+export default AdminSidebar

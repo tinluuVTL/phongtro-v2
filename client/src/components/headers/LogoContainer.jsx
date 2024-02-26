@@ -101,7 +101,7 @@ const LogoContainer = () => {
               </div>
             )}
             <img
-              src="/user.svg"
+              src={current?.rprofile?.image || "/user.svg"}
               alt="user-avatar"
               className="w-12 h-12 object-cover rounded-full"
             />

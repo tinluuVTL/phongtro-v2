@@ -4,6 +4,7 @@ import { useSearchParams } from "react-router-dom"
 import usePagination from "~/hooks/usePagination"
 
 const Pagination = ({ totalCount = 0, limit = 1 }) => {
+  console.log({ totalCount, limit })
   const [params] = useSearchParams()
   const pagination = usePagination(totalCount, +params.get("page"), limit)
 
@@ -15,6 +16,7 @@ const Pagination = ({ totalCount = 0, limit = 1 }) => {
 
     return `${start} - ${end}`
   }
+  console.log(pagination)
   return (
     <div className="flex items-center justify-center lg:justify-end w-full px-4 my-4 italic">
       <div className="flex items-center gap-2">

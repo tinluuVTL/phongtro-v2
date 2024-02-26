@@ -1,9 +1,10 @@
 import pathname from "./path"
 import { FaRegUser } from "react-icons/fa"
-import { BsReverseLayoutTextWindowReverse } from "react-icons/bs"
+import { BsReverseLayoutTextWindowReverse, BsPersonBoundingBox } from "react-icons/bs"
 import { IoHomeOutline } from "react-icons/io5"
 import { MdOutlineDashboard, MdOutlineBedroomParent } from "react-icons/md"
 import { LiaFileContractSolid } from "react-icons/lia"
+import { HiMiniUserGroup } from "react-icons/hi2"
 export const showOptions = [
   {
     id: 1,
@@ -76,6 +77,32 @@ export const managerSidebar = [
     name: "Quản lý hợp đồng",
     path: `/${pathname.manager.LAYOUT}/${pathname.manager.MANAGE_CONTRACT}`,
     icon: <LiaFileContractSolid size={20} />,
+  },
+  {
+    id: 6,
+    name: "Quản lý người thuê",
+    path: `/${pathname.manager.LAYOUT}/${pathname.manager.MANAGE_CUSTOMER}`,
+    icon: <BsPersonBoundingBox size={20} />,
+  },
+  {
+    id: 999,
+    name: "Homepage",
+    path: `/`,
+    icon: <IoHomeOutline size={20} />,
+  },
+]
+export const adminSidebar = [
+  {
+    id: 1,
+    name: "Thống kê",
+    path: `/${pathname.admin.LAYOUT}/${pathname.admin.DASHBOARD}`,
+    icon: <MdOutlineDashboard size={20} />,
+  },
+  {
+    id: 2,
+    name: "Quản lý thành viên",
+    path: `/${pathname.admin.LAYOUT}/${pathname.admin.MANAGE_USER}`,
+    icon: <HiMiniUserGroup size={20} />,
   },
   {
     id: 999,

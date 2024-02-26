@@ -58,19 +58,13 @@ const Dashboard = () => {
           <ShowInformation
             className="bg-orange-600"
             text="Tổng tin đăng"
-            number={data?.postData?.reduce(
-              (sum, el) => +el.postCounter + sum,
-              0
-            )}
+            number={data?.postData?.reduce((sum, el) => +el.postCounter + sum, 0)}
             image={<IoNewspaperOutline size={40} />}
           />
           <ShowInformation
             className="bg-blue-600"
             text="Tổng số phòng"
-            number={data?.roomStatus?.reduce(
-              (sum, el) => +el.rRooms?.length + sum,
-              0
-            )}
+            number={data?.roomStatus?.reduce((sum, el) => +el.rRooms?.length + sum, 0)}
             image={<MdMeetingRoom size={40} />}
           />
           <ShowInformation
@@ -83,8 +77,7 @@ const Dashboard = () => {
                   (sum1, el1) =>
                     sum1 +
                     el1.rPayment?.reduce(
-                      (sum2, el2) =>
-                        sum2 + (el2.status === "Thành công" ? el2.total : 0),
+                      (sum2, el2) => sum2 + (el2.status === "Thành công" ? el2.total : 0),
                       0
                     ),
                   0
@@ -102,15 +95,10 @@ const Dashboard = () => {
               {
                 label: "Số tin đăng",
                 data: [
-                  data?.classifyPost?.find((el) => el.isDeleted === false)
-                    ?.postCounter,
-                  data?.classifyPost?.find((el) => el.isDeleted === true)
-                    ?.postCounter,
+                  data?.classifyPost?.find((el) => el.isDeleted === false)?.postCounter,
+                  data?.classifyPost?.find((el) => el.isDeleted === true)?.postCounter,
                 ],
-                backgroundColor: [
-                  "rgba(255, 99, 132, 0.2)",
-                  "rgba(54, 162, 235, 0.2)",
-                ],
+                backgroundColor: ["rgba(255, 99, 132, 0.2)", "rgba(54, 162, 235, 0.2)"],
                 borderColor: ["rgba(255, 99, 132, 1)", "rgba(54, 162, 235, 1)"],
                 borderWidth: 1,
               },
@@ -125,32 +113,19 @@ const Dashboard = () => {
                 data: [
                   data?.roomStatus?.reduce(
                     (sum, el) =>
-                      sum +
-                      el.rRooms?.reduce(
-                        (sum1, el1) =>
-                          sum1 + (el1.position === "Đã thuê" ? 1 : 0),
-                        0
-                      ),
+                      sum + el.rRooms?.reduce((sum1, el1) => sum1 + (el1.position === "Đã thuê" ? 1 : 0), 0),
                     0
                   ),
                   data?.roomStatus?.reduce(
                     (sum, el) =>
                       sum +
-                      el.rRooms?.reduce(
-                        (sum1, el1) =>
-                          sum1 + (el1.position === "Đang xử lý" ? 1 : 0),
-                        0
-                      ),
+                      el.rRooms?.reduce((sum1, el1) => sum1 + (el1.position === "Đang xử lý" ? 1 : 0), 0),
                     0
                   ),
                   data?.roomStatus?.reduce(
                     (sum, el) =>
                       sum +
-                      el.rRooms?.reduce(
-                        (sum1, el1) =>
-                          sum1 + (el1.position === "Còn trống" ? 1 : 0),
-                        0
-                      ),
+                      el.rRooms?.reduce((sum1, el1) => sum1 + (el1.position === "Còn trống" ? 1 : 0), 0),
                     0
                   ),
                 ],
@@ -159,11 +134,7 @@ const Dashboard = () => {
                   "rgba(54, 162, 235, 0.2)",
                   "rgba(255, 206, 86, 0.2)",
                 ],
-                borderColor: [
-                  "rgba(255, 99, 132, 1)",
-                  "rgba(54, 162, 235, 1)",
-                  "rgba(255, 206, 86, 1)",
-                ],
+                borderColor: ["rgba(255, 99, 132, 1)", "rgba(54, 162, 235, 1)", "rgba(255, 206, 86, 1)"],
                 borderWidth: 1,
               },
             ]}
@@ -171,8 +142,7 @@ const Dashboard = () => {
         </div>
         <div className="col-span-1 w-full border rounded-md bg-white p-4">
           <h1 className="font-semibold mb-6 text-blue-600 text-lg">
-            Thống kê số tin đã đăng theo{" "}
-            <span>{type === "MONTH" ? "tháng" : "ngày"}</span>
+            Thống kê số tin đã đăng theo <span>{type === "MONTH" ? "tháng" : "ngày"}</span>
           </h1>
           <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4">
             <InputRadio
@@ -217,11 +187,7 @@ const Dashboard = () => {
             </div>
           </div>
           <div className="mt-4 min-h-[300px]">
-            <LineChart
-              customTime={{ from, to }}
-              isMonth={type === "MONTH"}
-              data={data?.postData}
-            />
+            <LineChart customTime={{ from, to }} isMonth={type === "MONTH"} data={data?.postData} />
           </div>
         </div>
       </div>

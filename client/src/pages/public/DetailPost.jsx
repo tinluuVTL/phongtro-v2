@@ -118,7 +118,8 @@ const DetailPost = () => {
           }}
         />
         <div className="w-full h-[200px]">
-          {/* <Map address={post?.address} /> */}
+         {/* google map */}
+          <Map address={post?.address} />
         </div>
         <div className="flex flex-col gap-2">
           <h2 className="font-bold mb-4">Danh sách các phòng ở</h2>

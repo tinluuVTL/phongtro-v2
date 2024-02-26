@@ -2,6 +2,7 @@ const pathname = {
   admin: {
     LAYOUT: "quan-tri-vien",
     DASHBOARD: "thong-ke",
+    MANAGE_USER: "quan-ly-thanh-vien",
   },
   user: {
     PROFILE: "thong-tin-ca-nhan",
@@ -16,6 +17,7 @@ const pathname = {
     CREATE_CONTRACT: "them-hop-dong",
     MANAGE_POST: "quan-ly-tin-dang",
     CREATE_POST: "tao-moi-tin-dang",
+    MANAGE_CUSTOMER: "quan-ly-nguoi-thue",
   },
   public: {
     LAYOUT: "/",

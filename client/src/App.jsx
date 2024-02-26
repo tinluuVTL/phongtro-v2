@@ -3,16 +3,7 @@ import { Route, Routes } from "react-router-dom"
 import { ToastContainer } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
 import pathname from "~/utilities/path"
-import {
-  CanHo,
-  Checkout,
-  DetailPost,
-  Home,
-  Login,
-  PhongTro,
-  PublicLayout,
-  TimGhep,
-} from "./pages/public"
+import { CanHo, Checkout, DetailPost, Home, Login, PhongTro, PublicLayout, TimGhep } from "./pages/public"
 import { useAppStore, useUserStore } from "./store"
 import { Profile, UserLayout, ViewContract } from "./pages/user"
 import { Modal } from "./components/commons"
@@ -25,11 +16,13 @@ import {
   ManagerLayout,
   CreatePost,
   ManagePost,
+  ManagerCustomer,
 } from "./pages/manager"
+import { AdminDashboard, AdminLayout } from "./pages/admin"
+import ManageUser from "./pages/admin/ManageUser"
 
 const App = () => {
-  const { getRoles, getCatalogs, isShowModal, contentModal, getCovenients } =
-    useAppStore()
+  const { getRoles, getCatalogs, isShowModal, contentModal, getCovenients } = useAppStore()
   const { getCurrent, token } = useUserStore()
   useEffect(() => {
     getRoles()
@@ -47,16 +40,11 @@ const App = () => {
         {/* Manager Routes */}
         <Route path={pathname.manager.LAYOUT} element={<ManagerLayout />}>
           <Route path={pathname.manager.DASHBOARD} element={<Dashboard />} />
-          <Route
-            path={pathname.manager.MANAGE_CONTRACT}
-            element={<ManageContract />}
-          />
+          <Route path={pathname.manager.MANAGE_CONTRACT} element={<ManageContract />} />
           <Route path={pathname.manager.MANAGE_ROOM} element={<ManageRoom />} />
-          <Route
-            path={pathname.manager.CREATE_CONTRACT}
-            element={<CreateContract />}
-          />
+          <Route path={pathname.manager.CREATE_CONTRACT} element={<CreateContract />} />
           <Route path={pathname.manager.MANAGE_POST} element={<ManagePost />} />
+          <Route path={pathname.manager.MANAGE_CUSTOMER} element={<ManagerCustomer />} />
           <Route path={pathname.manager.CREATE_POST} element={<CreatePost />} />
         </Route>
 
@@ -68,10 +56,7 @@ const App = () => {
           <Route path={pathname.public.CHECKOUT} element={<Checkout />} />
           <Route path={pathname.public.FILTER} element={<Filter />} />
           <Route path={pathname.public.TIMGHEP} element={<TimGhep />} />
-          <Route
-            path={pathname.public.DETAIL_POST__PID}
-            element={<DetailPost />}
-          />
+          <Route path={pathname.public.DETAIL_POST__PID} element={<DetailPost />} />
           <Route path={pathname.public.TRANGCHU} element={<Home />} />
         </Route>
 
@@ -82,6 +67,12 @@ const App = () => {
         {/* User Routes */}
         <Route path={pathname.user.LAYOUT} element={<UserLayout />}>
           <Route path={pathname.user.PROFILE} element={<Profile />} />
+        </Route>
+
+        {/* Admin Routes */}
+        <Route path={pathname.admin.LAYOUT} element={<AdminLayout />}>
+          <Route path={pathname.admin.DASHBOARD} element={<AdminDashboard />} />
+          <Route path={pathname.admin.MANAGE_USER} element={<ManageUser />} />
         </Route>
       </Routes>
       <ToastContainer

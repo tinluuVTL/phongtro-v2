@@ -1,14 +1,13 @@
 import React, { useState } from "react"
 import { HiMenuAlt2 } from "react-icons/hi"
-import { Navigate, Outlet } from "react-router-dom"
-import { ManagerSidebar } from "~/components/sidebars"
+import { Outlet } from "react-router-dom"
+import { AdminSidebar } from "~/components/sidebars"
 import { useUserStore } from "~/store"
-import pathname from "~/utilities/path"
 
-const ManagerLayout = () => {
+const AdminLayout = () => {
   const { current } = useUserStore()
   const [isShowMenu, setIsShowMenu] = useState(false)
-  if (!current || !current.rroles.some((el) => el.roleCode === "MANAGER"))
+  if (!current || !current.rroles.some((el) => el.roleCode === "ADMIN"))
     return <Navigate to={`/${pathname.public.LOGIN}`} replace={true} />
   return (
     <section className="w-full min-h-screen lg:grid bg-white grid-cols-10 mx-auto">
@@ -21,7 +20,7 @@ const ManagerLayout = () => {
             onClick={(e) => e.stopPropagation()}
             className="w-4/5 md:w-2/5 h-full bg-white"
           >
-            <ManagerSidebar setIsShowMenu={setIsShowMenu} />
+            <AdminSidebar setIsShowMenu={setIsShowMenu} />
           </div>
         </div>
       )}
@@ -39,7 +38,7 @@ const ManagerLayout = () => {
         />
       </div>
       <div className="col-span-2 hidden lg:block max-h-screen overflow-y-auto">
-        <ManagerSidebar />
+        <AdminSidebar />
       </div>
       <div className="col-span-8 lg:max-h-screen lg:overflow-y-auto">
         <Outlet />
@@ -48,4 +47,4 @@ const ManagerLayout = () => {
   )
 }
 
-export default ManagerLayout
+export default AdminLayout

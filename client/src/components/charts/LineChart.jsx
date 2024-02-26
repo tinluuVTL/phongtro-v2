@@ -10,21 +10,8 @@ import {
   Legend,
 } from "chart.js"
 import { Line } from "react-chartjs-2"
-import {
-  getDaysInMonth,
-  getDaysInRange,
-  getMonthInYear,
-  getMonthsInRange,
-} from "~/utilities/fn"
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend
-)
+import { getDaysInMonth, getDaysInRange, getMonthInYear, getMonthsInRange } from "~/utilities/fn"
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend)
 
 const createOptions = (chartData) => {
   return {
@@ -69,6 +56,7 @@ const LineChart = ({ data, isMonth, customTime }) => {
   return (
     <Line
       options={options}
+      id="line-chart"
       data={{
         labels: chartData?.map((el) => el.date),
         datasets: [
