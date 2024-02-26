@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       User.hasOne(models.Profile, { foreignKey: "userId", as: "rprofile" })
       User.hasMany(models.Role_User, { foreignKey: "userId", as: "rroles" })
+      User.hasMany(models.Contract, { foreignKey: "userId", as: "rContracts" })
     }
   }
   User.init(

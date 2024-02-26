@@ -1,23 +1,11 @@
 const router = require("express").Router()
 const joi = require("joi")
 const validate = require("../middlewares/validateDto.middleware")
-const {
-  password,
-  stringReq,
-  string,
-} = require("../middlewares/schema.middleware")
+const { password, stringReq, string } = require("../middlewares/schema.middleware")
 const ctrls = require("../controllers/user.controller")
-const {
-  verifyToken,
-  isManager,
-  isAdmin,
-} = require("../middlewares/verifyToken.middleware")
+const { verifyToken, isManager, isAdmin } = require("../middlewares/verifyToken.middleware")
 
-router.post(
-  "/validate-phonenumber",
-  validate(joi.object({ phone: stringReq })),
-  ctrls.verifyPhoneNumber
-)
+router.post("/validate-phonenumber", validate(joi.object({ phone: stringReq })), ctrls.verifyPhoneNumber)
 router.post(
   "/register",
   validate(
@@ -59,6 +47,7 @@ router.patch(
 )
 router.get("/current", verifyToken, ctrls.getCurrent)
 router.get("/manager", verifyToken, isManager, ctrls.getUsers)
+router.get("/customer", verifyToken, isManager, ctrls.getCustomersByManager)
 router.get("/", verifyToken, isAdmin, ctrls.getUsers)
 router.patch("/utm", verifyToken, ctrls.updateManager)
 module.exports = router

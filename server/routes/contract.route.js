@@ -1,16 +1,9 @@
 const router = require("express").Router()
 const ctrls = require("../controllers/contract.controller")
-const {
-  verifyToken,
-  isManager,
-} = require("../middlewares/verifyToken.middleware")
+const { verifyToken, isManager } = require("../middlewares/verifyToken.middleware")
 const validateDto = require("../middlewares/validateDto.middleware")
 const joi = require("joi")
-const {
-  stringReq,
-  numberReq,
-  dateReq,
-} = require("../middlewares/schema.middleware")
+const { stringReq, numberReq, dateReq } = require("../middlewares/schema.middleware")
 router.post(
   "/new",
   verifyToken,
@@ -31,6 +24,7 @@ router.post(
   ),
   ctrls.create
 )
+router.get("/customer", verifyToken, isManager, ctrls.getCustomer)
 router.get("/", verifyToken, ctrls.get)
 router.patch(
   "/",
