@@ -10,13 +10,10 @@ const InputCheckbox = ({
   optionsClassName,
   validate,
   options = [],
+  values = [],
 }) => {
   return (
-    <div
-      className={twMerge(
-        clsx("w-full flex flex-col gap-2", containerClassName)
-      )}
-    >
+    <div className={twMerge(clsx("w-full flex flex-col gap-2", containerClassName))}>
       {title && (
         <label className="font-semibold" htmlFor="">
           {title + ":"}
@@ -26,6 +23,7 @@ const InputCheckbox = ({
         {options.map((el, idx) => (
           <div className="flex my-2 items-center gap-2" key={idx}>
             <input
+              checked={values?.some((n) => n === el.code)}
               type="checkbox"
               name={id}
               {...register(id, validate)}
@@ -36,9 +34,7 @@ const InputCheckbox = ({
           </div>
         ))}
       </div>
-      {errors && errors[id] && (
-        <small className="text-xs text-red-600">{errors[id].message}</small>
-      )}
+      {errors && errors[id] && <small className="text-xs text-red-600">{errors[id].message}</small>}
     </div>
   )
 }

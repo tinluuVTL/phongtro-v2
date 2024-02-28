@@ -4,7 +4,7 @@ import { InputCheckbox, InputForm } from "../inputs"
 import { Button } from "../commons"
 import { useAppStore } from "~/store"
 
-const EditRoom = ({ editRoom, setRooms }) => {
+const EditRoom = ({ editRoom, setRooms, updateRoom, fromPost }) => {
   const {
     register,
     formState: { errors },
@@ -21,7 +21,7 @@ const EditRoom = ({ editRoom, setRooms }) => {
         price: editRoom.price,
         area: editRoom.area,
         stayMax: editRoom.stayMax,
-        convenients: editRoom?.convenients,
+        convenients: editRoom?.rConvenients,
         electricPrice: editRoom?.electricPrice,
         waterPrice: editRoom?.waterPrice,
         capsPrice: editRoom?.capsPrice,
@@ -30,20 +30,21 @@ const EditRoom = ({ editRoom, setRooms }) => {
     }
   }, [editRoom])
   const onSubmit = (data) => {
-    setRooms((prev) => [
-      ...prev.filter((el) => el.title !== editRoom.title),
-      data,
-    ])
+    if (fromPost) {
+      updateRoom(editRoom.id, data)
+    } else {
+      setRooms((prev) => [...prev.filter((el) => el.title !== editRoom.title), data])
+    }
     setModal(false, null)
   }
+
+  console.log(watch("convenients"))
   return (
     <div
       onClick={(e) => e.stopPropagation()}
       className="w-[95%] md:w-[500px] max-h-[95vh] overflow-y-auto p-4 rounded-md bg-white"
     >
-      <h1 className="pb-4 text-xl font-bold border-b">
-        Chỉnh sửa / Thêm tiện nghi phòng
-      </h1>
+      <h1 className="pb-4 text-xl font-bold border-b">Chỉnh sửa / Thêm tiện nghi phòng</h1>
       <form className="py-4 flex flex-col gap-4">
         <InputForm
           register={register}

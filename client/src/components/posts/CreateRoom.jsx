@@ -1,10 +1,11 @@
-import React from "react"
-import { InputCheckbox, InputForm } from "../inputs"
+import React, { useEffect, useState } from "react"
+import { InputCheckbox, InputForm, InputSelect } from "../inputs"
 import { useForm } from "react-hook-form"
 import { Button } from "../commons"
-import { useAppStore } from "~/store"
+import { useAppStore, useUserStore } from "~/store"
+import { apiGetPosts } from "~/apis/post"
 
-const CreateRoom = ({ pushRoom }) => {
+const CreateRoom = ({ pushRoom, single }) => {
   const {
     register,
     formState: { errors },
@@ -13,7 +14,17 @@ const CreateRoom = ({ pushRoom }) => {
     setValue,
     watch,
   } = useForm()
+
   const { convenients, setModal } = useAppStore()
+  const { current } = useUserStore()
+  const [posts, setPosts] = useState()
+  useEffect(() => {
+    const fetchPostByManager = async () => {
+      const response = await apiGetPosts({ postedBy: current.id, fields: "id,title" })
+      if (response.success) setPosts(response.posts)
+    }
+    fetchPostByManager()
+  }, [])
   const onSubmit = (data) => {
     pushRoom(data)
     reset()
@@ -21,8 +32,18 @@ const CreateRoom = ({ pushRoom }) => {
   return (
     <form
       onClick={(e) => e.stopPropagation()}
-      className="py-4 bg-white w-full md:w-4/5 lg:w-[500px] rounded-md p-4 max-h-screen overflow-y-auto flex flex-col gap-4"
+      className="py-4 px-12 bg-white w-full md:w-4/5 lg:w-[700px] rounded-md p-4 max-h-screen overflow-y-auto flex flex-col gap-4"
     >
+      {single && (
+        <InputSelect
+          register={register}
+          id="postId"
+          errors={errors}
+          validate={{ required: "Không được bỏ trống." }}
+          title="Bài đăng"
+          options={posts?.map((el) => ({ ...el, value: el.id, label: el.title })) || []}
+        />
+      )}
       <InputForm
         register={register}
         id="title"
@@ -102,10 +123,7 @@ const CreateRoom = ({ pushRoom }) => {
         <Button onClick={handleSubmit(onSubmit)} className="my-4">
           Thêm
         </Button>
-        <Button
-          onClick={() => setModal(false, null)}
-          className="my-4 bg-orange-600"
-        >
+        <Button onClick={() => setModal(false, null)} className="my-4 bg-orange-600">
           Quay lại
         </Button>
       </div>
