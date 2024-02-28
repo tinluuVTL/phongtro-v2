@@ -1,13 +1,13 @@
 import moment from "moment"
 import React, { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
-import { RiDeleteBin6Line } from "react-icons/ri"
 import { useSearchParams } from "react-router-dom"
 import { apiGetCustomers } from "~/apis/user"
 import { InputForm, InputSelect } from "~/components/inputs"
+import { RentedList } from "~/components/manager"
 import { Pagiantion } from "~/components/paginations"
 import useDebounce from "~/hooks/useDebounce"
-import { useUserStore } from "~/store"
+import { useAppStore } from "~/store"
 const ManageCustomner = () => {
   const {
     register,
@@ -16,10 +16,9 @@ const ManageCustomner = () => {
   } = useForm()
   const sort = watch("sort")
   const keyword = watch("keyword")
-  const { current } = useUserStore()
   const [contracts, setContracts] = useState()
-  const [update, setUpdate] = useState(false)
   const [searchParams] = useSearchParams()
+  const { setModal } = useAppStore()
   const fetchContractCustomers = async (params) => {
     const response = await apiGetCustomers({
       limit: import.meta.env.VITE_LIMIT_CUSTOMER,
@@ -33,7 +32,7 @@ const ManageCustomner = () => {
     if (sort) params.sort = sort
     if (debounceKeyword) params.keyword = debounceKeyword
     fetchContractCustomers(params)
-  }, [update, debounceKeyword, searchParams])
+  }, [debounceKeyword, searchParams])
   return (
     <div className="h-full w-full">
       <div className="py-4 lg:border-b flex items-center justify-between flex-wrap gap-4 px-4 w-full">
@@ -83,10 +82,11 @@ const ManageCustomner = () => {
               <th className="border p-3 text-center">Tên</th>
               <th className="border p-3 text-center">Ảnh</th>
               <th className="border p-3 text-center">Quê quán</th>
+              <th className="border p-3 hidden md:table-cell text-center">Giới tính</th>
+              <th className="border p-3 hidden lg:table-cell text-center">Email</th>
               <th className="border hidden md:table-cell p-3 text-center">Năm sinh</th>
               <th className="border p-3 text-center">CCCD</th>
               <th className="border hidden lg:table-cell p-3 text-center">Phòng thuê</th>
-              <th className="border  p-3 text-white bg-blue-600 text-center">Thao tác</th>
             </tr>
           </thead>
           <tbody>
@@ -102,22 +102,18 @@ const ManageCustomner = () => {
                   </span>
                 </td>
                 <td className="border p-3 text-center">{el.rprofile?.address}</td>
+                <td className="border p-3 text-center">{el.rprofile?.gender}</td>
+                <td className="border p-3 text-center">{el.rprofile?.email || "Chưa cập nhật"}</td>
                 <td className="border hidden md:table-cell p-3 text-center">
                   {moment(el.birthday).format("YYYY")}
                 </td>
                 <td className="border hidden lg:table-cell p-3 text-center">{el.rprofile?.CID}</td>
                 <td className="border p-3 text-center">
-                  <span className="text-blue-600 hover:underline cursor-pointer text-center">Xem</span>
-                </td>
-                <td className="border p-3 text-center">
-                  <span className="flex items-center text-gray-500 gap-4 justify-center">
-                    <span
-                      title="Xóa"
-                      className="cursor-pointer hover:text-blue-600"
-                      onClick={() => handleDeleteContract(el.id)}
-                    >
-                      <RiDeleteBin6Line size={18} />
-                    </span>
+                  <span
+                    onClick={() => setModal(true, <RentedList user={el} />)}
+                    className="text-blue-600 hover:underline cursor-pointer text-center"
+                  >
+                    Xem
                   </span>
                 </td>
               </tr>

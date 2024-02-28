@@ -18,6 +18,8 @@ const pathname = {
     MANAGE_POST: "quan-ly-tin-dang",
     CREATE_POST: "tao-moi-tin-dang",
     MANAGE_CUSTOMER: "quan-ly-nguoi-thue",
+    UPDATE_POST: "cap-nhat-tin-dang",
+    UPDATE_POST__POSTID: "cap-nhat-tin-dang/:postId",
   },
   public: {
     LAYOUT: "/",

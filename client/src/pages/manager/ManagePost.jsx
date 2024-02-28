@@ -1,6 +1,6 @@
 import moment from "moment"
 import React, { useEffect, useState } from "react"
-import { Link, useSearchParams } from "react-router-dom"
+import { Link, useNavigate, useSearchParams } from "react-router-dom"
 import { apiGetPosts, apiRemovePost } from "~/apis/post"
 import { Pagiantion } from "~/components/paginations"
 import { useAppStore, useUserStore } from "~/store"
@@ -8,10 +8,8 @@ import pathname from "~/utilities/path"
 import { RiDeleteBin6Line } from "react-icons/ri"
 import { FiEdit } from "react-icons/fi"
 import slugify from "slugify"
-import { UpdatePost } from "~/components/posts"
 import { InputForm, InputSelect } from "~/components/inputs"
 import { useForm } from "react-hook-form"
-import { Button } from "~/components/commons"
 import useDebounce from "~/hooks/useDebounce"
 import { toast } from "react-toastify"
 import Swal from "sweetalert2"
@@ -27,6 +25,7 @@ const ManagePost = () => {
   const sort = watch("sort")
   const keyword = watch("keyword")
   const { setModal, isShowModal } = useAppStore()
+  const navigate = useNavigate()
   const [update, setUpdate] = useState(false)
   const [posts, setPosts] = useState()
   const fetchPosts = async (params) => {
@@ -123,9 +122,7 @@ const ManagePost = () => {
                 <th className="border p-3 text-center">Thể loại</th>
                 <th className="border p-3 text-center">Đánh giá</th>
                 <th className="border p-3 text-center">Ngày chỉnh sửa</th>
-                <th className="border p-3 text-white bg-blue-600 text-center">
-                  Hành động
-                </th>
+                <th className="border p-3 text-white bg-blue-600 text-center">Hành động</th>
               </tr>
             </thead>
             <tbody>
@@ -133,28 +130,20 @@ const ManagePost = () => {
                 <tr key={el.id}>
                   <td className="border p-3 text-center">{el.id}</td>
                   <td className="border p-3 text-center cursor-pointer hover:underline text-blue-600">
-                    <Link
-                      to={`/${pathname.public.DETAIL_POST}/${el.id}/${slugify(
-                        el.title
-                      )}`}
-                    >
+                    <Link to={`/${pathname.public.DETAIL_POST}/${el.id}/${slugify(el.title)}`}>
                       {el.title}
                     </Link>
                   </td>
-                  <td className="border p-3 text-center">
-                    {el.rRooms?.filter(i => !i.isDeleted)?.length}
-                  </td>
-                  <td className="border p-3 text-center">
-                    {el.rCatalog?.value}
-                  </td>
+                  <td className="border p-3 text-center">{el.rRooms?.filter((i) => !i.isDeleted)?.length}</td>
+                  <td className="border p-3 text-center">{el.rCatalog?.value}</td>
                   <td className="border p-3 text-center">{el.star}</td>
-                  <td className="border p-3 text-center">
-                    {moment(el.updatedAt).format("DD/MM/YY")}
-                  </td>
+                  <td className="border p-3 text-center">{moment(el.updatedAt).format("DD/MM/YY")}</td>
                   <td className="border p-3 text-center">
                     <span className="flex items-center gap-4 justify-center">
                       <span
-                        onClick={() => setModal(true, <UpdatePost post={el} />)}
+                        onClick={() =>
+                          navigate(`/${pathname.manager.LAYOUT}/${pathname.manager.UPDATE_POST}/${el.id}`)
+                        }
                         className="cursor-pointer hover:text-blue-600"
                       >
                         <FiEdit size={18} />
@@ -173,10 +162,7 @@ const ManagePost = () => {
           </table>
         </div>
         <div className="my-4">
-          <Pagiantion
-            totalCount={posts?.count}
-            limit={+import.meta.env.VITE_LIMIT_POSTS}
-          />
+          <Pagiantion totalCount={posts?.count} limit={+import.meta.env.VITE_LIMIT_POSTS} />
         </div>
       </div>
     </div>

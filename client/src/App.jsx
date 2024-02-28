@@ -17,6 +17,7 @@ import {
   CreatePost,
   ManagePost,
   ManagerCustomer,
+  UpdatePost,
 } from "./pages/manager"
 import { AdminDashboard, AdminLayout } from "./pages/admin"
 import ManageUser from "./pages/admin/ManageUser"
@@ -45,6 +46,7 @@ const App = () => {
           <Route path={pathname.manager.CREATE_CONTRACT} element={<CreateContract />} />
           <Route path={pathname.manager.MANAGE_POST} element={<ManagePost />} />
           <Route path={pathname.manager.MANAGE_CUSTOMER} element={<ManagerCustomer />} />
+          <Route path={pathname.manager.UPDATE_POST__POSTID} element={<UpdatePost />} />
           <Route path={pathname.manager.CREATE_POST} element={<CreatePost />} />
         </Route>
 

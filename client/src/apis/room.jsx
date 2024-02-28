@@ -23,3 +23,15 @@ export const apiAddIndexCounter = (data) =>
     method: "post",
     data,
   })
+export const apiCreateRoom = (data) =>
+  axios({
+    url: "/room/add",
+    method: "post",
+    data,
+  })
+export const apiUpdateRoomFull = (id, data) =>
+  axios({
+    url: "/room/full/" + id,
+    method: "patch",
+    data,
+  })

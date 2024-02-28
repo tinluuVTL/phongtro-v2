@@ -4,13 +4,15 @@ import { useForm } from "react-hook-form"
 import { FiEdit } from "react-icons/fi"
 import { RiDeleteBin6Line } from "react-icons/ri"
 import { useSearchParams } from "react-router-dom"
-import { apiGetUsersByAdmin } from "~/apis/user"
+import { apiDeleteUser, apiGetUsersByAdmin } from "~/apis/user"
 import { InputForm, InputSelect } from "~/components/inputs"
 import { Pagiantion } from "~/components/paginations"
 import useDebounce from "~/hooks/useDebounce"
 import { useAppStore } from "~/store"
 import { BiMessageSquareDetail } from "react-icons/bi"
 import { DetailUser, UpdateUser } from "~/components/user"
+import { toast } from "react-toastify"
+import Swal from "sweetalert2"
 
 const ManageUser = () => {
   const [searchParams] = useSearchParams()
@@ -27,6 +29,7 @@ const ManageUser = () => {
   const fetchUsers = async (params) => {
     const response = await apiGetUsersByAdmin({
       limit: import.meta.env.VITE_LIMIT_POSTS,
+      isDeleted: false,
       ...params,
     })
     if (response.success) {
@@ -40,7 +43,25 @@ const ManageUser = () => {
     if (debounceKeyword) params.keyword = debounceKeyword
     !isShowModal && fetchUsers(params)
   }, [isShowModal, searchParams, sort, debounceKeyword, update])
-
+  const handleRemove = (id) => {
+    Swal.fire({
+      icon: "warning",
+      title: "Xác nhận",
+      text: "Bạn chắc chắn muốn xóa thành viên ID: " + id + "?",
+      showCancelButton: true,
+      showConfirmButton: true,
+      confirmButtonText: "Xóa",
+      cancelButtonText: "Hủy",
+    }).then(async (rs) => {
+      if (rs.isConfirmed) {
+        const response = await apiDeleteUser(id)
+        if (response.success) {
+          setUpdate((prev) => !prev)
+          toast.success(response.mes)
+        } else toast.error(response.mes)
+      }
+    })
+  }
   return (
     <div className="w-full h-full">
       <div className="flex justify-between py-4 lg:border-b px-4 items-center">
@@ -92,9 +113,7 @@ const ManageUser = () => {
                 <th className="border p-3 text-center">Số điện thoại</th>
                 <th className="border p-3 text-center">Vai trò</th>
                 <th className="border p-3 text-center">Ngày đăng ký</th>
-                <th className="border p-3 text-white bg-blue-600 text-center">
-                  Hành động
-                </th>
+                <th className="border p-3 text-white bg-blue-600 text-center">Hành động</th>
               </tr>
             </thead>
             <tbody>
@@ -106,9 +125,7 @@ const ManageUser = () => {
                   <td className="border p-3 text-center">
                     {el?.rroles?.map((el) => el.roleValues?.value)?.join(" / ")}
                   </td>
-                  <td className="border p-3 text-center">
-                    {moment(el.createdAt).format("DD/MM/YY")}
-                  </td>
+                  <td className="border p-3 text-center">{moment(el.createdAt).format("DD/MM/YY")}</td>
                   <td className="border p-3 text-center">
                     <span className="flex items-center gap-4 justify-center">
                       <span
@@ -140,10 +157,7 @@ const ManageUser = () => {
           </table>
         </div>
         <div className="my-4">
-          <Pagiantion
-            totalCount={users?.count}
-            limit={+import.meta.env.VITE_LIMIT_POSTS}
-          />
+          <Pagiantion totalCount={users?.count} limit={+import.meta.env.VITE_LIMIT_POSTS} />
         </div>
       </div>
     </div>

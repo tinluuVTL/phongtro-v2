@@ -23,3 +23,9 @@ export const apiRemoveContract = (id) =>
     url: "/contract/" + id,
     method: "delete",
   })
+export const apiGetCustomer = (params) =>
+  axios({
+    url: "/contract/customer",
+    method: "get",
+    params,
+  })
