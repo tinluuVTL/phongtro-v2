@@ -6,26 +6,11 @@ import slugify from "slugify"
 import { twMerge } from "tailwind-merge"
 import clsx from "clsx"
 
-const PostCard = ({
-  images = [],
-  title,
-  star = 0,
-  address,
-  rRooms = [],
-  rCatalog,
-  bgCatalog,
-  id,
-  rUser,
-}) => {
+const PostCard = ({ images = [], title, star = 0, address, rRooms = [], rCatalog, bgCatalog, id, rUser }) => {
   return (
     <div className="p-4 bg-white col-span-1 relative border flex flex-col lg:grid lg:grid-cols-10 gap-4">
       <div
-        className={twMerge(
-          clsx(
-            "absolute p-2 right-2 top-2 bg-orange-600 text-white text-sm",
-            bgCatalog
-          )
-        )}
+        className={twMerge(clsx("absolute p-2 right-2 top-2 bg-orange-600 text-white text-sm", bgCatalog))}
       >
         {rCatalog?.value}
       </div>
@@ -38,9 +23,7 @@ const PostCard = ({
       </div>
       <div className="col-span-8 w-full flex flex-col gap-2">
         <Link
-          to={`/${pathname.public.DETAIL_POST}/${id}/${slugify(
-            title
-          ).toLocaleLowerCase()}`}
+          to={`/${pathname.public.DETAIL_POST}/${id}/${slugify(title).toLocaleLowerCase()}`}
           className="font-semibold cursor-pointer hover:underline text-lg text-blue-600 line-clamp-3"
         >
           {title}
@@ -68,14 +51,8 @@ const PostCard = ({
               {rRooms.length === 1
                 ? `${formatMoney(rRooms[0]?.price)}`
                 : `${formatMoney(
-                    rRooms
-                      .map((el) => el.price)
-                      .reduce((a, b) => Math.min(a, b))
-                  )} ~ ${formatMoney(
-                    rRooms
-                      .map((el) => el.price)
-                      .reduce((a, b) => Math.max(a, b))
-                  )}`}
+                    rRooms.map((el) => el.price).reduce((a, b) => Math.min(a, b))
+                  )} ~ ${formatMoney(rRooms.map((el) => el.price).reduce((a, b) => Math.max(a, b)))}`}
             </span>{" "}
             VNĐ
           </span>

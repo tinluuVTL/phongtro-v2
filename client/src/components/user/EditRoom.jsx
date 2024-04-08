@@ -13,7 +13,8 @@ const EditRoom = ({ editRoom, setRooms, updateRoom, fromPost }) => {
     setValue,
     watch,
   } = useForm()
-  const { convenients, setModal } = useAppStore()
+  const { convenientsData, setModal } = useAppStore()
+  const convenients = watch("convenients")
   useEffect(() => {
     if (editRoom) {
       reset({
@@ -21,7 +22,7 @@ const EditRoom = ({ editRoom, setRooms, updateRoom, fromPost }) => {
         price: editRoom.price,
         area: editRoom.area,
         stayMax: editRoom.stayMax,
-        convenients: editRoom?.rConvenients,
+        convenients: editRoom?.rConvenients?.map((el) => el.convenientId),
         electricPrice: editRoom?.electricPrice,
         waterPrice: editRoom?.waterPrice,
         capsPrice: editRoom?.capsPrice,
@@ -38,7 +39,6 @@ const EditRoom = ({ editRoom, setRooms, updateRoom, fromPost }) => {
     setModal(false, null)
   }
 
-  console.log(watch("convenients"))
   return (
     <div
       onClick={(e) => e.stopPropagation()}
@@ -112,9 +112,10 @@ const EditRoom = ({ editRoom, setRooms, updateRoom, fromPost }) => {
           register={register}
           id="convenients"
           errors={errors}
+          values={convenients}
           validate={{ required: "Không được bỏ trống." }}
           title="Tiện nghi"
-          options={convenients?.map((el) => ({
+          options={convenientsData?.map((el) => ({
             ...el,
             label: el.name,
             value: el.id,
