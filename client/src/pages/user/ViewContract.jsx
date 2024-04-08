@@ -3,7 +3,7 @@ import WebViewer from "@pdftron/webviewer"
 import { usePostStore } from "~/store"
 const ViewContract = () => {
   const viewer = useRef(null)
-  const { contractData, setContractData } = usePostStore()
+  const { contractData, setContractData, ownerData } = usePostStore()
   useEffect(() => {
     document.title = "Xem hợp đồng - Chọn trọ tốt"
     WebViewer(
@@ -20,7 +20,7 @@ const ViewContract = () => {
         const doc = documentViewer.getDocument()
         const keys = await doc.getTemplateKeys()
         console.log(keys)
-        const data = Object.entries(contractData)
+        const data = Object.entries({ ...contractData, ...ownerData })
         const options = {}
         for (const key of keys) {
           options[key] = data.find((el) => el[0] === key)[1]

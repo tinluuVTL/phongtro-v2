@@ -12,11 +12,10 @@ const Profile = () => {
   const titleRef = useRef()
   const {
     register,
-    formState: { errors, isDirty },
+    formState: { errors },
     handleSubmit,
     reset,
     setValue,
-    getValues,
   } = useForm()
   useEffect(() => {
     if (current) {
@@ -29,6 +28,7 @@ const Profile = () => {
         email: current.rprofile?.email,
         gender: current.rprofile?.gender,
         image: current.rprofile?.image,
+        CID: current.rprofile?.CID,
       })
     }
   }, [current])
@@ -62,30 +62,11 @@ const Profile = () => {
           title="Số điện  thoại"
           readOnly={!current?.rroles?.some((el) => el.roleCode === "USER")}
         />
-        <InputForm
-          id="firstName"
-          register={register}
-          errors={errors}
-          title="Họ và tên đệm"
-        />
-        <InputForm
-          id="lastName"
-          register={register}
-          errors={errors}
-          title="Tên"
-        />
-        <InputForm
-          id="address"
-          register={register}
-          errors={errors}
-          title="Địa chỉ hiện tại"
-        />
-        <InputForm
-          id="email"
-          register={register}
-          errors={errors}
-          title="Địa chỉ email"
-        />
+        <InputForm id="firstName" register={register} errors={errors} title="Họ và tên đệm" />
+        <InputForm id="lastName" register={register} errors={errors} title="Tên" />
+        <InputForm id="CID" register={register} errors={errors} title="CCCD" />
+        <InputForm id="address" register={register} errors={errors} title="Địa chỉ hiện tại" />
+        <InputForm id="email" register={register} errors={errors} title="Địa chỉ email" />
         <InputSelect
           id="gender"
           register={register}
@@ -96,14 +77,8 @@ const Profile = () => {
         />
         {current?.rprofile?.image && (
           <div className="flex flex-col gap-2 w-full">
-            <span className="font-medium text-main-700">
-              Ảnh dại diện hiện tại
-            </span>
-            <img
-              src={current?.rprofile?.image}
-              alt=""
-              className="w-24 h-24 object-cover rounded-full"
-            />
+            <span className="font-medium text-main-700">Ảnh dại diện hiện tại</span>
+            <img src={current?.rprofile?.image} alt="" className="w-24 h-24 object-cover rounded-full" />
           </div>
         )}
         <InputFile
@@ -111,10 +86,7 @@ const Profile = () => {
           label="Đổi ảnh đại diện"
           getImages={(images) => setValue("image", images[0]?.path)}
         />
-        <Button
-          onClick={handleSubmit(handleUpdateProfile)}
-          className="mt-4 mb-8 lg:w-fit text-center"
-        >
+        <Button onClick={handleSubmit(handleUpdateProfile)} className="mt-4 mb-8 lg:w-fit text-center">
           Cập nhật
         </Button>
       </form>

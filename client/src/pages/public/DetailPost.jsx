@@ -81,11 +81,7 @@ const DetailPost = () => {
             wrapAround={false}
           >
             {post?.images?.map((el, idx) => (
-              <img
-                src={el}
-                key={idx}
-                className="h-[200px] lg:h-[300px] object-contain  mx-auto"
-              />
+              <img src={el} key={idx} className="h-[200px] lg:h-[300px] object-contain  mx-auto" />
             ))}
           </Carousel>
         </div>
@@ -108,8 +104,7 @@ const DetailPost = () => {
             Địa chỉ: <span>{post?.address}</span>
           </span>
           <span>
-            Này cập nhật gần nhất:{" "}
-            <span>{moment(post?.updatedAt).format("DD/MM/YYYY")}</span>
+            Này cập nhật gần nhất: <span>{moment(post?.updatedAt).format("DD/MM/YYYY")}</span>
           </span>
         </div>
         <div
@@ -118,34 +113,20 @@ const DetailPost = () => {
           }}
         />
         <div className="w-full h-[200px]">
-         {/* google map */}
           <Map address={post?.address} />
         </div>
         <div className="flex flex-col gap-2">
           <h2 className="font-bold mb-4">Danh sách các phòng ở</h2>
           <div className="grid gap-4 grid-cols-1 md:grid-cols-2">
             {post?.rRooms
-              ?.filter((el) => !el.isDeleted)
+              ?.filter((el) => !el.isDeleted && el.position === "Còn trống")
               ?.map((el) => (
-                <RoomCard
-                  post={{
-                    title: post?.title,
-                    id: post?.id,
-                    address: post?.address,
-                  }}
-                  key={el.id}
-                  {...el}
-                />
+                <RoomCard post={post} key={el.id} {...el} />
               ))}
           </div>
         </div>
         <div>
-          <Rating
-            title={post?.title}
-            pid={post?.id}
-            averageStarPoint={post?.star}
-            detail={post?.rRating}
-          />
+          <Rating title={post?.title} pid={post?.id} averageStarPoint={post?.star} detail={post?.rRating} />
         </div>
       </div>
       <div className="col-span-7 flex flex-col gap-4 lg:col-span-3">
