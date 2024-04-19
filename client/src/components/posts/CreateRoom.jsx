@@ -14,8 +14,8 @@ const CreateRoom = ({ pushRoom, single }) => {
     setValue,
     watch,
   } = useForm()
-
-  const { convenients, setModal } = useAppStore()
+  const convenients = watch("convenients")
+  const { convenientsData, setModal } = useAppStore()
   const { current } = useUserStore()
   const [posts, setPosts] = useState()
   useEffect(() => {
@@ -29,6 +29,7 @@ const CreateRoom = ({ pushRoom, single }) => {
     pushRoom(data)
     reset()
   }
+  console.log(convenients)
   return (
     <form
       onClick={(e) => e.stopPropagation()}
@@ -112,12 +113,14 @@ const CreateRoom = ({ pushRoom, single }) => {
         errors={errors}
         validate={{ required: "Không được bỏ trống." }}
         title="Tiện nghi"
-        options={convenients?.map((el) => ({
+        options={convenientsData?.map((el) => ({
           ...el,
           label: el.name,
-          value: el.id,
+          value: "" + el.id,
+          code: "" + el.id,
         }))}
         optionsClassName="grid grid-cols-2 gap-4 mt-3"
+        values={convenients || []}
       />
       <div className="flex items-center gap-4 justify-center">
         <Button onClick={handleSubmit(onSubmit)} className="my-4">

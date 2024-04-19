@@ -13,23 +13,14 @@ const UserLayout = () => {
   return (
     <section className="w-full lg:grid bg-white grid-cols-10 mx-auto">
       {isShowMenu && (
-        <div
-          onClick={() => setIsShowMenu(false)}
-          className="absolute z-20 inset-0 bg-overlay-70 h-full"
-        >
-          <div
-            onClick={(e) => e.stopPropagation()}
-            className="w-4/5 md:w-2/5 h-full bg-white"
-          >
+        <div onClick={() => setIsShowMenu(false)} className="absolute z-20 inset-0 bg-overlay-70 h-full">
+          <div onClick={(e) => e.stopPropagation()} className="w-4/5 md:w-2/5 h-full bg-white">
             <UserSidebar setIsShowMenu={setIsShowMenu} />
           </div>
         </div>
       )}
       <div className="p-4 lg:hidden border-b flex justify-between items-center">
-        <div
-          onClick={() => setIsShowMenu(true)}
-          className="cursor-pointer lg:hidden text-blue-600"
-        >
+        <div onClick={() => setIsShowMenu(true)} className="cursor-pointer lg:hidden text-blue-600">
           <HiMenuAlt2 size={30} />
         </div>
         <img
@@ -41,7 +32,7 @@ const UserLayout = () => {
       <div className="col-span-2 hidden lg:block max-h-screen overflow-y-auto">
         <UserSidebar />
       </div>
-      <div className="col-span-8 lg:max-h-screen lg:overflow-y-auto">
+      <div className="col-span-8 lg:min-h-screen lg:max-h-screen lg:overflow-y-auto">
         <Outlet />
       </div>
     </section>

@@ -2,7 +2,7 @@ import React from "react"
 import { formatMoney } from "~/utilities/fn"
 import { Button } from "../commons"
 import Swal from "sweetalert2"
-import { createSearchParams, useLocation, useNavigate } from "react-router-dom"
+import { createSearchParams, useNavigate } from "react-router-dom"
 import pathname from "~/utilities/path"
 import { usePostStore, useUserStore } from "~/store"
 
@@ -21,10 +21,9 @@ const RoomCard = ({
   internetPrice,
 }) => {
   const navigate = useNavigate()
-  const { setCheckoutRoom } = usePostStore()
+  const { setCheckoutRoom, setOwnerData } = usePostStore()
   const { current } = useUserStore()
-  const localtion = useLocation()
-  const handleOrder = () => {
+  const handleOrder = async () => {
     if (!current)
       return Swal.fire({
         title: "Oops!",
@@ -54,6 +53,18 @@ const RoomCard = ({
       confirmButtonText: "Đi tới thanh toán",
     }).then((rs) => {
       if (rs.isConfirmed) {
+        console.log({
+          ownername: post?.rUser?.rprofile?.firstName + " " + post?.rUser?.rprofile?.lastName,
+          owneraddress: post?.rUser?.rprofile?.address,
+          ownercid: post?.rUser?.rprofile?.CID,
+          ownerphone: post?.rUser?.phone,
+        })
+        setOwnerData({
+          ownername: (post?.rUser?.rprofile?.firstName || "") + " " + (post?.rUser?.rprofile?.lastName || ""),
+          owneraddress: post?.rUser?.rprofile?.address || "",
+          ownercid: post?.rUser?.rprofile?.CID || "",
+          ownerphone: post?.rUser?.phone,
+        })
         setCheckoutRoom({ title, price, post, roomId: id })
         navigate(`/${pathname.public.CHECKOUT}`)
       }

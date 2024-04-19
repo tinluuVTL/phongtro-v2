@@ -8,6 +8,7 @@ const pathname = {
     PROFILE: "thong-tin-ca-nhan",
     LAYOUT: "thanh-vien",
     CONTRACT: "hop-dong",
+    MY_ROOM: "phong-thue-cua-toi",
   },
   manager: {
     LAYOUT: "chu-tro",
