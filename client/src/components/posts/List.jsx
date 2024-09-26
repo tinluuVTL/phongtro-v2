@@ -3,13 +3,15 @@ import { apiGetPosts } from "~/apis/post"
 import { PostCard } from "."
 import { Pagiantion } from "../paginations"
 import { useAppStore } from "~/store"
-import { useSearchParams } from "react-router-dom"
+import { useLocation, useSearchParams } from "react-router-dom"
 
-const List = ({ filters = {}, isHidePagination }) => {
+const List = ({ filters = {}, isHidePagination, tag, codeTag }) => {
   const [posts, setPosts] = useState()
   const { catalogs } = useAppStore()
   const [seachParams] = useSearchParams()
+  const location = useLocation()
   const fetchPosts = async (params) => {
+    if (location.pathname === tag) params.catalogId = codeTag
     const response = await apiGetPosts({
       limit: import.meta.env.VITE_LIMIT_POSTS,
       ...filters,
@@ -28,10 +30,7 @@ const List = ({ filters = {}, isHidePagination }) => {
       delete searchParamsObj["gia-den"]
     }
     if (searchParamsObj["gia-den"] && searchParamsObj["gia-tu"]) {
-      searchParamsObj.price = [
-        searchParamsObj["gia-tu"],
-        searchParamsObj["gia-den"],
-      ]
+      searchParamsObj.price = [searchParamsObj["gia-tu"], searchParamsObj["gia-den"]]
       delete searchParamsObj["gia-den"]
       delete searchParamsObj["gia-tu"]
     }
@@ -44,10 +43,7 @@ const List = ({ filters = {}, isHidePagination }) => {
       delete searchParamsObj["dien-tich-den"]
     }
     if (searchParamsObj["dien-tich-den"] && searchParamsObj["dien-tich-tu"]) {
-      searchParamsObj.area = [
-        searchParamsObj["dien-tich-tu"],
-        searchParamsObj["dien-tich-den"],
-      ]
+      searchParamsObj.area = [searchParamsObj["dien-tich-tu"], searchParamsObj["dien-tich-den"]]
       delete searchParamsObj["dien-tich-den"]
       delete searchParamsObj["dien-tich-tu"]
     }
@@ -58,19 +54,10 @@ const List = ({ filters = {}, isHidePagination }) => {
     <div className="w-full">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:grid-cols-1">
         {posts?.rows?.map((el) => (
-          <PostCard
-            key={el.id}
-            {...el}
-            bgCatalog={catalogs?.find((ctg) => ctg.id === el.rCatalog?.id)?.bg}
-          />
+          <PostCard key={el.id} {...el} bgCatalog={catalogs?.find((ctg) => ctg.id === el.rCatalog?.id)?.bg} />
         ))}
       </div>
-      {!isHidePagination && (
-        <Pagiantion
-          totalCount={posts?.count}
-          limit={import.meta.env.VITE_LIMIT_POSTS}
-        />
-      )}
+      {!isHidePagination && <Pagiantion totalCount={posts?.count} limit={import.meta.env.VITE_LIMIT_POSTS} />}
     </div>
   )
 }

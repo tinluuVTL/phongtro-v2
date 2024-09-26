@@ -1,11 +1,13 @@
 import moment from "moment"
 import React, { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
+import { FaEdit, FaRegEye } from "react-icons/fa"
 import { useSearchParams } from "react-router-dom"
 import { apiGetCustomers } from "~/apis/user"
 import { InputForm, InputSelect } from "~/components/inputs"
 import { RentedList } from "~/components/manager"
 import { Pagiantion } from "~/components/paginations"
+import { UpdateUserByManager } from "~/components/user"
 import useDebounce from "~/hooks/useDebounce"
 import { useAppStore } from "~/store"
 const ManageCustomner = () => {
@@ -80,13 +82,14 @@ const ManageCustomner = () => {
             <tr>
               <th className="border p-3 text-center">ID</th>
               <th className="border p-3 text-center">Tên</th>
+              <th className="border p-3 text-center">SĐT</th>
               <th className="border p-3 text-center">Ảnh</th>
               <th className="border p-3 text-center">Quê quán</th>
               <th className="border p-3 hidden md:table-cell text-center">Giới tính</th>
               <th className="border p-3 hidden lg:table-cell text-center">Email</th>
               <th className="border hidden md:table-cell p-3 text-center">Năm sinh</th>
               <th className="border p-3 text-center">CCCD</th>
-              <th className="border hidden lg:table-cell p-3 text-center">Phòng thuê</th>
+              <th className="border hidden lg:table-cell p-3 text-center">Thao tác</th>
             </tr>
           </thead>
           <tbody>
@@ -96,6 +99,7 @@ const ManageCustomner = () => {
                 <td className="border p-3 text-center">
                   <span className="line-clamp-2">{el.rprofile?.lastName + " " + el.rprofile?.firstName}</span>
                 </td>
+                <td className="border p-3 text-center">{el.phone}</td>
                 <td className="border p-3 text-center">
                   <span className="flex items-center justify-center">
                     <img src={el.rprofile?.image || "/user.svg"} alt="" className="w-12 h-12 object-cover" />
@@ -109,11 +113,21 @@ const ManageCustomner = () => {
                 </td>
                 <td className="border hidden lg:table-cell p-3 text-center">{el.rprofile?.CID}</td>
                 <td className="border p-3 text-center">
-                  <span
-                    onClick={() => setModal(true, <RentedList user={el} />)}
-                    className="text-blue-600 hover:underline cursor-pointer text-center"
-                  >
-                    Xem
+                  <span className="flex items-center justify-center gap-4">
+                    <span
+                      title="Xem phòng thuê"
+                      onClick={() => setModal(true, <RentedList user={el} />)}
+                      className="text-blue-600 hover:underline cursor-pointer text-center"
+                    >
+                      <FaRegEye size={18} />
+                    </span>
+                    <span
+                      title="Chỉnh sửa thông tin người thuê"
+                      onClick={() => setModal(true, <UpdateUserByManager user={el} />)}
+                      className="text-blue-600 hover:underline cursor-pointer text-center"
+                    >
+                      <FaEdit size={18} />
+                    </span>
                   </span>
                 </td>
               </tr>

@@ -2,7 +2,7 @@ import pathname from "./path"
 import { FaRegUser } from "react-icons/fa"
 import { BsReverseLayoutTextWindowReverse, BsPersonBoundingBox } from "react-icons/bs"
 import { IoHomeOutline } from "react-icons/io5"
-import { MdOutlineDashboard, MdOutlineBedroomParent } from "react-icons/md"
+import { MdOutlineDashboard, MdOutlineBedroomParent, MdOutlineMeetingRoom } from "react-icons/md"
 import { LiaFileContractSolid } from "react-icons/lia"
 import { HiMiniUserGroup } from "react-icons/hi2"
 export const showOptions = [
@@ -45,6 +45,12 @@ export const userSidebar = [
     name: "Thông tin cá nhân",
     path: `/${pathname.user.LAYOUT}/${pathname.user.PROFILE}`,
     icon: <FaRegUser size={20} />,
+  },
+  {
+    id: 2,
+    name: "Phòng thuê của tôi",
+    path: `/${pathname.user.LAYOUT}/${pathname.user.MY_ROOM}`,
+    icon: <MdOutlineMeetingRoom size={20} />,
   },
   {
     id: 999,

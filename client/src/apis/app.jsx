@@ -13,9 +13,7 @@ export const apiGetCatalogs = () =>
   })
 export const apiUploadImage = (data) =>
   axiosLibrary({
-    url: `https://api.cloudinary.com/v1_1/${
-      import.meta.env.VITE_CLOUDINARY_NAME
-    }/image/upload`,
+    url: `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_NAME}/image/upload`,
     method: "post",
     data,
   })
@@ -28,6 +26,12 @@ export const apiGetLngLatFromAddress = (params) =>
 export const apiGetDashboardManager = (params) =>
   axios({
     url: "/app/dashboard/manager",
+    method: "get",
+    params,
+  })
+export const apiGetDashboardAdmin = (params) =>
+  axios({
+    url: "/app/dashboard/admin",
     method: "get",
     params,
   })

@@ -1,12 +1,7 @@
 import React, { useState } from "react"
 import { useForm } from "react-hook-form"
 import { Button } from "~/components/commons"
-import {
-  InputFile,
-  InputForm,
-  InputSelect,
-  InputText,
-} from "~/components/inputs"
+import { InputFile, InputForm, InputSelect, InputText } from "~/components/inputs"
 import { useAppStore, useUserStore } from "~/store"
 import readXlsxFile from "read-excel-file"
 import Swal from "sweetalert2"
@@ -15,8 +10,28 @@ import { RiDeleteBin6Line, RiFileEditLine } from "react-icons/ri"
 import { EditRoom } from "~/components/user"
 import { apiCreateNewPost } from "~/apis/post"
 import { CreateRoom } from "~/components/posts"
+import { Navigate } from "react-router-dom"
+import pathname from "~/utilities/path"
 
 const CreatePost = () => {
+  const { resetImages, current } = useUserStore()
+  if (
+    !current?.rprofile ||
+    !current.rprofile?.firstName ||
+    !current.rprofile?.lastName ||
+    !current.rprofile?.CID ||
+    !current.rprofile?.address
+  ) {
+    Swal.fire({
+      icon: "warning",
+      title: "Yêu cầu xác thực",
+      text: "Bạn phải cập nhật đầy đủ thông tin chủ trọ trước khi đăng bài.",
+      showCancelButton: false,
+      showConfirmButton: true,
+      confirmButtonText: "Tôi biết rồi",
+    })
+    return <Navigate to={`/${pathname.user.LAYOUT}/${pathname.user.PROFILE}`} />
+  }
   const {
     register,
     formState: { errors },
@@ -26,14 +41,11 @@ const CreatePost = () => {
   } = useForm()
   const { setModal } = useAppStore()
   const { catalogs } = useAppStore()
-  const { resetImages } = useUserStore()
   const [rooms, setRooms] = useState([])
   const [createRoomMode, setCreateRoomMode] = useState("FILE")
-
   const handleReadFileExcel = async (e) => {
     const file = e.target.files[0]
-    if (!file.type.includes("spreadsheetml.sheet"))
-      return Swal.fire("Oops!", "Chỉ hỗ trợ file Excel", "info")
+    if (!file.type.includes("spreadsheetml.sheet")) return Swal.fire("Oops!", "Chỉ hỗ trợ file Excel", "info")
     const rows = await readXlsxFile(file)
     if (rows && rows.length > 0) {
       const roomData = []
@@ -162,18 +174,14 @@ const CreatePost = () => {
                   onChange={handleReadFileExcel}
                 />
                 {errors && errors["roomfile"] && (
-                  <small className="text-xs text-red-600">
-                    {errors["roomfile"].message}
-                  </small>
+                  <small className="text-xs text-red-600">{errors["roomfile"].message}</small>
                 )}
               </>
             )}
             {createRoomMode === "MANUAL" && (
               <Button
                 className="w-fit"
-                onClick={() =>
-                  setModal(true, <CreateRoom pushRoom={handleAddRoom} />)
-                }
+                onClick={() => setModal(true, <CreateRoom pushRoom={handleAddRoom} />)}
               >
                 Thêm phòng
               </Button>
@@ -203,20 +211,12 @@ const CreatePost = () => {
                         <span className="flex items-center justify-center gap-3">
                           <span
                             className="cursor-pointer"
-                            onClick={() =>
-                              setModal(
-                                true,
-                                <EditRoom setRooms={setRooms} editRoom={el} />
-                              )
-                            }
+                            onClick={() => setModal(true, <EditRoom setRooms={setRooms} editRoom={el} />)}
                             title="Chỉnh sửa / Thêm tiện nghi"
                           >
                             <RiFileEditLine size={18} />
                           </span>
-                          <span
-                            onClick={() => handleRemoveRoom(el.title)}
-                            title="Xóa"
-                          >
+                          <span onClick={() => handleRemoveRoom(el.title)} title="Xóa">
                             <RiDeleteBin6Line size={18} />
                           </span>
                         </span>

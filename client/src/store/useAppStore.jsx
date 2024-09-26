@@ -18,12 +18,11 @@ export const useAppStore = create((set) => ({
   contentModal: null,
   catalogs: [],
   roles: [],
-  convenients: [],
+  convenientsData: [],
   isResetImg: false,
 
   // Methods
-  setModal: (isShowModal, contentModal) =>
-    set(() => ({ isShowModal, contentModal })),
+  setModal: (isShowModal, contentModal) => set(() => ({ isShowModal, contentModal })),
 
   getRoles: async () => {
     const response = await apiGetRoles()
@@ -43,7 +42,7 @@ export const useAppStore = create((set) => ({
   },
   getCovenients: async () => {
     const response = await apiGetAllConvenients()
-    if (response.success) set(() => ({ convenients: response.convenients }))
-    else set(() => ({ convenients: [] }))
+    if (response.success) set(() => ({ convenientsData: response.convenients }))
+    else set(() => ({ convenientsData: [] }))
   },
 }))

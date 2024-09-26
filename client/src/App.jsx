@@ -5,7 +5,7 @@ import "react-toastify/dist/ReactToastify.css"
 import pathname from "~/utilities/path"
 import { CanHo, Checkout, DetailPost, Home, Login, PhongTro, PublicLayout, TimGhep } from "./pages/public"
 import { useAppStore, useUserStore } from "./store"
-import { Profile, UserLayout, ViewContract } from "./pages/user"
+import { MyRoom, Profile, UserLayout, ViewContract } from "./pages/user"
 import { Modal } from "./components/commons"
 import Filter from "./pages/public/Filter"
 import {
@@ -21,6 +21,7 @@ import {
 } from "./pages/manager"
 import { AdminDashboard, AdminLayout } from "./pages/admin"
 import ManageUser from "./pages/admin/ManageUser"
+import clsx from "clsx"
 
 const App = () => {
   const { getRoles, getCatalogs, isShowModal, contentModal, getCovenients } = useAppStore()
@@ -34,7 +35,12 @@ const App = () => {
     if (token) getCurrent()
   }, [token])
   return (
-    <main className="bg-gray-100">
+    <main
+      className={clsx(
+        "bg-gray-100 ",
+        isShowModal ? "w-screen h-screen overflow-hidden" : "w-full h-full overflow-auto"
+      )}
+    >
       {isShowModal && <Modal>{contentModal}</Modal>}
 
       <Routes>
@@ -69,6 +75,7 @@ const App = () => {
         {/* User Routes */}
         <Route path={pathname.user.LAYOUT} element={<UserLayout />}>
           <Route path={pathname.user.PROFILE} element={<Profile />} />
+          <Route path={pathname.user.MY_ROOM} element={<MyRoom />} />
         </Route>
 
         {/* Admin Routes */}

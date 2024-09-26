@@ -97,7 +97,13 @@ module.exports = {
 
   updateProfile: asyncHandler(async (req, res) => {
     const { id } = req.user
-    const { username, email, firstName, lastName, address, gender, image, phone } = req.body
+    const { username, email, firstName, lastName, address, gender, image, phone, CID } = req.body
+    const alreadyCID = await db.Profile.findOne({ where: { CID } })
+    if (alreadyCID && +alreadyCID.id !== +id)
+      return res.json({
+        mes: "CCCD đã có người sử dụng",
+        success: false,
+      })
     await db.Profile.findOrCreate({
       where: { userId: id },
       defaults: {
@@ -105,7 +111,10 @@ module.exports = {
       },
     })
     const [updateUser, updateProfile] = await Promise.all([
-      db.Profile.update({ email, firstName, lastName, address, gender, image }, { where: { userId: id } }),
+      db.Profile.update(
+        { email, firstName, lastName, address, gender: gender || "Khác", image, CID },
+        { where: { userId: id } }
+      ),
       db.User.update({ username, phone }, { where: { id } }),
     ])
 
@@ -305,6 +314,121 @@ module.exports = {
       success: Boolean(response),
       mes: response ? "Got." : "Có lỗi, hãy thử lại sau.",
       users: response,
+    })
+  }),
+  updateUser: asyncHandler(async (req, res) => {
+    const { id } = req.params
+    const { username, email, firstName, lastName, address, gender, image, phone, role = [] } = req.body
+    await db.Profile.findOrCreate({
+      where: { userId: id },
+      defaults: {
+        userId: id,
+      },
+    })
+    const [updateUser, updateProfile] = await Promise.all([
+      db.Profile.update(
+        { email, firstName, lastName, address, gender: gender || "Khác", image },
+        { where: { userId: id } }
+      ),
+      db.User.update({ username, phone }, { where: { id } }),
+    ])
+    await db.Role_User.destroy({ where: { userId: id } })
+    await db.Role_User.bulkCreate(role.map((el) => ({ userId: id, roleCode: el })))
+
+    return res.json({
+      success: updateUser[0] > 0 && updateProfile[0] > 0,
+      mes: updateUser[0] > 0 && updateProfile[0] > 0 ? "Cập nhật thành công" : "Có lỗi hãy thử lại xem.",
+    })
+  }),
+  updateUserByManager: asyncHandler(async (req, res) => {
+    const { id } = req.params
+    const { firstName, lastName, address, gender, image, phone } = req.body
+    await db.Profile.findOrCreate({
+      where: { userId: id },
+      defaults: {
+        userId: id,
+      },
+    })
+    const [updateUser, updateProfile] = await Promise.all([
+      db.Profile.update(
+        { firstName, lastName, address, gender: gender || "Khác", image },
+        { where: { userId: id } }
+      ),
+      db.User.update({ phone }, { where: { id } }),
+    ])
+
+    return res.json({
+      success: updateUser[0] > 0 && updateProfile[0] > 0,
+      mes: updateUser[0] > 0 && updateProfile[0] > 0 ? "Cập nhật thành công" : "Có lỗi hãy thử lại xem.",
+    })
+  }),
+  deleteUser: asyncHandler(async (req, res) => {
+    const { id } = req.params
+    const response = await db.User.update({ isDeleted: true }, { where: { id } })
+
+    return res.json({
+      success: response[0] > 0,
+      mes: response[0] > 0 ? "Xóa thành công" : "Có lỗi hãy thử lại xem.",
+    })
+  }),
+  getRentedRooms: asyncHandler(async (req, res) => {
+    const { id } = req.user
+    const { limit, page, sort, fields, keyword, isDeleted, ...filters } = req.query
+    const options = {}
+    filters.userId = id
+    if (fields) {
+      const attributes = fields.split(",")
+      const isExclude = attributes.some((el) => el.startsWith("-"))
+      if (isExclude)
+        options.attributes = {
+          exclude: attributes.map((el) => el.replace("-", "")),
+        }
+      else options.attributes = attributes
+    }
+    if (keyword)
+      filters[Op.or] = [
+        {
+          "$rRoom.title$": Sequelize.where(
+            Sequelize.fn("LOWER", Sequelize.col("rRoom.title")),
+            "LIKE",
+            `%${keyword.toLocaleLowerCase()}%`
+          ),
+        },
+      ]
+    if (sort) {
+      const order = sort
+        .split(",")
+        .map((el) => (el.startsWith("-") ? [["rRoom", el.replace("-", ""), "DESC"]] : [["rRoom", el, "ASC"]]))
+      options.order = order
+    }
+    if (!isDeleted) filters.isDeleted = false
+    // filters["$rRooms.isDeleted&"] = false
+    if (!limit) {
+      const response = await db.Payment.findAll({
+        where: filters,
+        ...options,
+      })
+      return res.json({
+        success: response.length > 0,
+        mes: response.length > 0 ? "Got." : "Có lỗi, hãy thử lại sau.",
+        rentedRooms: response,
+      })
+    }
+    const prevPage = !page || page === 1 ? 0 : page - 1
+    const offset = prevPage * limit
+    if (offset) options.offset = offset
+    options.limit = +limit
+    const response = await db.Payment.findAndCountAll({
+      where: filters,
+      ...options,
+      distinct: true,
+      include: [{ model: db.Room, as: "rRoom" }],
+    })
+
+    return res.json({
+      success: Boolean(response),
+      mes: response ? "Got." : "Có lỗi, hãy thử lại sau.",
+      posts: response,
     })
   }),
 }

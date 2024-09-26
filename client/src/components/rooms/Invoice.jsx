@@ -10,24 +10,20 @@ const Invoice = ({ counter, room }) => {
     const input = document.getElementById("divToPrint")
     html2canvas(input).then((canvas) => {
       const imgData = canvas.toDataURL("image/png")
-      const pdf = new jsPDF()
+      const pdf = new jsPDF({
+        orientation: "landscape",
+        unit: "in",
+      })
       pdf.addImage(imgData, "JPEG", 0, 0)
       // pdf.output('dataurlnewwindow');
-      pdf.save("hoa-don-dich-vu.pdf")
+      pdf.save(Date.now() + "-hoa-don-dich-vu.pdf")
     })
   }
+
   return (
-    <div
-      onClick={(e) => e.stopPropagation()}
-      className="bg-white rounded-md p-4"
-    >
-      <div
-        id="divToPrint"
-        className="bg-white min-w-[800px] text-black p-8 mx-auto"
-      >
-        <div className="text-center font-semibold text-3xl">
-          Hoá đơn sử dụng dịch vụ
-        </div>
+    <div onClick={(e) => e.stopPropagation()} className="bg-white overflow-x-auto rounded-md p-4">
+      <div id="divToPrint" className="bg-white w-full lg:min-w-[800px] text-black p-8 mx-auto">
+        <div className="text-center font-semibold text-3xl">Hoá đơn sử dụng dịch vụ</div>
         <div className="my-8 flex flex-col gap-3 p-4">
           <span>
             Người thuê:{" "}
@@ -38,8 +34,7 @@ const Invoice = ({ counter, room }) => {
             </span>
           </span>
           <span>
-            Phòng ở:{" "}
-            <span className="font-semibold text-blue-600">{room.title}</span>
+            Phòng ở: <span className="font-semibold text-blue-600">{room.title}</span>
           </span>
           <table>
             <thead>
@@ -53,9 +48,7 @@ const Invoice = ({ counter, room }) => {
             </thead>
             <tbody>
               <tr>
-                <td className="border p-3 text-center">
-                  {moment(counter.date).format("DD/MM/YYYY")}
-                </td>
+                <td className="border p-3 text-center">{moment(counter.date).format("DD/MM/YYYY")}</td>
                 <td className="border p-3 text-center">
                   <span className="flex flex-col gap-2">
                     <span>Điện</span>
@@ -74,22 +67,18 @@ const Invoice = ({ counter, room }) => {
                 </td>
                 <td className="border p-3 text-center">
                   <span className="flex flex-col gap-2">
-                    <span>{formatMoney(+room.electricPrice) + "/kWh"}</span>
-                    <span>{formatMoney(+room.waterPrice) + "/khối"}</span>
-                    <span>{formatMoney(+room.capsPrice) + "/tháng"}</span>
-                    <span>{formatMoney(+room.internetPrice + "/tháng")}</span>
+                    <span>{formatMoney(room.electricPrice) + "/kWh"}</span>
+                    <span>{formatMoney(room.waterPrice) + "/khối"}</span>
+                    <span>{formatMoney(room.capsPrice) + "/tháng"}</span>
+                    <span>{formatMoney(room.internetPrice) + "/tháng"}</span>
                   </span>
                 </td>
                 <td className="border p-3 text-center">
                   <span className="flex flex-col gap-2">
-                    <span>
-                      {formatMoney(counter.electric * room.electricPrice)}
-                    </span>
+                    <span>{formatMoney(counter.electric * room.electricPrice)}</span>
                     <span>{formatMoney(counter.water * room.waterPrice)}</span>
-                    <span>{formatMoney(counter.caps * room.capsPrice)}</span>
-                    <span>
-                      {formatMoney(counter.internet * room.internetPrice)}
-                    </span>
+                    <span>{formatMoney(room.capsPrice)}</span>
+                    <span>{formatMoney(room.internetPrice)}</span>
                   </span>
                 </td>
               </tr>
@@ -97,12 +86,12 @@ const Invoice = ({ counter, room }) => {
           </table>
           <div className="flex items-center justify-between my-4">
             <span>Số tiền cần thanh toán:</span>
-            <span className="text-red-600">
+            <span className="font-bold text-xl">
               {formatMoney(
                 counter.electric * room.electricPrice +
                   counter.water * room.waterPrice +
-                  counter.caps * room.capsPrice +
-                  counter.internet * room.internetPrice
+                  room.capsPrice * 1 +
+                  room.internetPrice * 1
               ) + " VND"}
             </span>
           </div>

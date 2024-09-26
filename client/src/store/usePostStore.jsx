@@ -6,6 +6,7 @@ export const usePostStore = create(
     (set, get) => ({
       checkoutRoom: null,
       contractData: null,
+      ownerData: null,
       isResetFilter: false,
 
       setCheckoutRoom: (data) => {
@@ -14,8 +15,14 @@ export const usePostStore = create(
       setContractData: (data) => {
         return set(() => ({ contractData: data }))
       },
+      setOwnerData: (data) => {
+        return set(() => ({ ownerData: data }))
+      },
       setIsResetFilter: (data) => {
         return set(() => ({ isResetFilter: data }))
+      },
+      resetContract: () => {
+        return set(() => ({ ownerData: null, contractData: null }))
       },
     }),
     {
@@ -24,7 +31,7 @@ export const usePostStore = create(
       partialize: (state) =>
         Object.fromEntries(
           Object.entries(state).filter(
-            (el) => el[0] === "checkoutRoom" || el[0] === "contractData"
+            (el) => el[0] === "checkoutRoom" || el[0] === "contractData" || el[0] === "ownerData"
           )
         ),
     }

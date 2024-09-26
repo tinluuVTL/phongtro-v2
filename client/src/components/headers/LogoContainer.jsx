@@ -36,10 +36,7 @@ const LogoContainer = () => {
           onClick={() => setIsShowMenu(false)}
           className="absolute inset-0 z-50 bg-overlay-70 flex justify-end"
         >
-          <div
-            onClick={(e) => e.stopPropagation()}
-            className="bg-white w-4/5 animate-slide-right"
-          >
+          <div onClick={(e) => e.stopPropagation()} className="bg-white w-4/5 animate-slide-right">
             <NavPopup setIsShowMenu={setIsShowMenu} />
           </div>
         </div>
@@ -56,10 +53,7 @@ const LogoContainer = () => {
           className="px-4 py-2 border-blue-600 placeholder:text-sm placeholder:text-gray-400 border w-full rounded-l-full rounded-r-full"
         />
       </div>
-      <div
-        onClick={() => setIsShowMenu(true)}
-        className="cursor-pointer md:hidden text-blue-600"
-      >
+      <div onClick={() => setIsShowMenu(true)} className="cursor-pointer md:hidden text-blue-600">
         <HiMenuAlt3 size={30} />
       </div>
       <div className="hidden justify-center items-center gap-3 md:flex">
@@ -80,22 +74,14 @@ const LogoContainer = () => {
               <div className="absolute flex flex-col right-0 top-full py-2 bg-white rounded-md border drop-shadow-sm">
                 {showOptions.map((el) => (
                   <Fragment key={el.id}>
-                    {current.rroles?.some(
-                      (item) => item.roleCode === el.code
-                    ) && (
-                      <Link
-                        className="px-4 py-2 hover:bg-gray-100"
-                        to={el.path}
-                      >
+                    {current.rroles?.some((item) => item.roleCode === el.code) && (
+                      <Link className="px-4 py-2 hover:bg-gray-100" to={el.path}>
                         {el.name}
                       </Link>
                     )}
                   </Fragment>
                 ))}
-                <span
-                  className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                  onClick={() => logout()}
-                >
+                <span className="px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={() => logout()}>
                   Đăng xuất
                 </span>
               </div>
@@ -115,12 +101,14 @@ const LogoContainer = () => {
             </div>
           </div>
         )}
-        <Link
-          to={`/${pathname.manager.LAYOUT}/${pathname.manager.CREATE_POST}`}
-          className="bg-orange-600 px-4 py-3 rounded-md flex items-center justify-center text-white"
-        >
-          Đăng tin mới
-        </Link>
+        {current?.rroles?.some((el) => el.roleCode === "MANAGER") && (
+          <Link
+            to={`/${pathname.manager.LAYOUT}/${pathname.manager.CREATE_POST}`}
+            className="bg-orange-600 px-4 py-3 rounded-md flex items-center justify-center text-white"
+          >
+            Đăng tin mới
+          </Link>
+        )}
       </div>
     </div>
   )

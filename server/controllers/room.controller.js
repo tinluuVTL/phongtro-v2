@@ -4,17 +4,7 @@ const { Sequelize, Op } = require("sequelize")
 
 module.exports = {
   getRooms: asyncHandler(async (req, res) => {
-    const {
-      limit,
-      page,
-      sort,
-      fields,
-      title,
-      keyword,
-      postedBy,
-      isDeleted,
-      ...filters
-    } = req.query
+    const { limit, page, sort, fields, title, keyword, postedBy, isDeleted, ...filters } = req.query
     const options = {}
     if (postedBy) filters["$rPost.postedBy$"] = postedBy
     if (fields) {
@@ -31,14 +21,14 @@ module.exports = {
       filters[Op.or] = [
         {
           title: Sequelize.where(
-            Sequelize.fn("LOWER", Sequelize.col("Post.title")),
+            Sequelize.fn("LOWER", Sequelize.col("rPost.title")),
             "LIKE",
             `%${keyword.toLocaleLowerCase()}%`
           ),
         },
         {
           address: Sequelize.where(
-            Sequelize.fn("LOWER", Sequelize.col("Post.address")),
+            Sequelize.fn("LOWER", Sequelize.col("rPost.address")),
             "LIKE",
             `%${keyword.toLocaleLowerCase()}%`
           ),
@@ -47,9 +37,7 @@ module.exports = {
     if (sort) {
       const order = sort
         .split(",")
-        .map((el) =>
-          el.startsWith("-") ? [el.replace("-", ""), "DESC"] : [el, "ASC"]
-        )
+        .map((el) => (el.startsWith("-") ? [el.replace("-", ""), "DESC"] : [el, "ASC"]))
       options.order = order
     }
 
@@ -130,16 +118,23 @@ module.exports = {
     const response = await db.Room.update(req.body, { where: { id: roomId } })
     return res.json({
       success: response[0] > 0,
-      mes:
-        response[0] > 0 ? "Cập nhật thành công." : "Cập nhật không thành công.",
+      mes: response[0] > 0 ? "Cập nhật thành công." : "Cập nhật không thành công.",
+    })
+  }),
+  updateFull: asyncHandler(async (req, res) => {
+    const { roomId } = req.params
+    const { convenients, ...data } = req.body
+    const response = await db.Room.update(data, { where: { id: roomId } })
+    await db.Room_Convenient.destroy({ where: { roomId } })
+    await db.Room_Convenient.bulkCreate(convenients.map((el) => ({ roomId, convenientId: el })))
+    return res.json({
+      success: response[0] > 0,
+      mes: response[0] > 0 ? "Cập nhật thành công." : "Cập nhật không thành công.",
     })
   }),
   remove: asyncHandler(async (req, res) => {
     const { roomId } = req.params
-    const response = await db.Room.update(
-      { isDeleted: true },
-      { where: { id: roomId } }
-    )
+    const response = await db.Room.update({ isDeleted: true }, { where: { id: roomId } })
     return res.json({
       success: response > 0,
       mes: response > 0 ? "Xóa thành công." : "Xóa không thành công.",
@@ -153,9 +148,14 @@ module.exports = {
     const response = await db.IndexCounter.create(data)
     return res.json({
       success: !!response,
-      mes: response
-        ? "Cập nhật chỉ số thành công"
-        : "Cập nhật chỉ số thất bại.",
+      mes: response ? "Cập nhật chỉ số thành công" : "Cập nhật chỉ số thất bại.",
+    })
+  }),
+  createRoom: asyncHandler(async (req, res) => {
+    const response = await db.Room.create(req.body)
+    return res.json({
+      success: !!response,
+      mes: response ? "Thêm phòng trọ thành công" : "Có lỗi, hãy thử lại sau.",
     })
   }),
 }

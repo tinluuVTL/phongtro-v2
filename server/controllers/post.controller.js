@@ -45,13 +45,8 @@ module.exports = {
 
     const rooms_convenients = []
     newRooms.forEach((el) => {
-      const convenients = rooms.find(
-        (room) => room.title === el.title
-      )?.convenients
-      if (convenients)
-        convenients.forEach((n) =>
-          rooms_convenients.push({ roomId: el.id, convenientId: n })
-        )
+      const convenients = rooms.find((room) => room.title === el.title)?.convenients
+      if (convenients) convenients.forEach((n) => rooms_convenients.push({ roomId: el.id, convenientId: n }))
     })
 
     const response = await db.Room_Convenient.bulkCreate(rooms_convenients)
@@ -67,18 +62,7 @@ module.exports = {
   }),
 
   getPosts: asyncHandler(async (req, res) => {
-    const {
-      limit,
-      page,
-      sort,
-      fields,
-      title,
-      keyword,
-      price,
-      area,
-      isDeleted,
-      ...filters
-    } = req.query
+    const { limit, page, sort, fields, title, keyword, price, area, isDeleted, ...filters } = req.query
     const options = {}
     if (fields) {
       const attributes = fields.split(",")
@@ -109,9 +93,7 @@ module.exports = {
     if (sort) {
       const order = sort
         .split(",")
-        .map((el) =>
-          el.startsWith("-") ? [el.replace("-", ""), "DESC"] : [el, "ASC"]
-        )
+        .map((el) => (el.startsWith("-") ? [el.replace("-", ""), "DESC"] : [el, "ASC"]))
       options.order = order
     }
     if (!isDeleted) filters.isDeleted = false
@@ -153,9 +135,7 @@ module.exports = {
           model: db.User,
           as: "rUser",
           attributes: ["id", "username"],
-          include: [
-            { model: db.Profile, attributes: ["image"], as: "rprofile" },
-          ],
+          include: [{ model: db.Profile, attributes: ["image"], as: "rprofile" }],
         },
         {
           model: db.Room,
@@ -196,9 +176,7 @@ module.exports = {
           model: db.User,
           as: "rUser",
           attributes: ["id", "username", "phone"],
-          include: [
-            { model: db.Profile, attributes: ["image"], as: "rprofile" },
-          ],
+          include: [{ model: db.Profile, as: "rprofile" }],
         },
         {
           model: db.Room,
@@ -230,9 +208,7 @@ module.exports = {
               model: db.User,
               as: "rVoter",
               attributes: ["id", "username"],
-              include: [
-                { model: db.Profile, as: "rprofile", attributes: ["image"] },
-              ],
+              include: [{ model: db.Profile, as: "rprofile", attributes: ["image"] }],
             },
           ],
         },
@@ -278,29 +254,21 @@ module.exports = {
 
       const rooms_convenients = []
       newRooms.forEach((el) => {
-        const convenients = rooms.find(
-          (room) => room.title === el.title
-        )?.convenients
+        const convenients = rooms.find((room) => room.title === el.title)?.convenients
         if (convenients)
-          convenients.forEach((n) =>
-            rooms_convenients.push({ roomId: el.id, convenientId: n })
-          )
+          convenients.forEach((n) => rooms_convenients.push({ roomId: el.id, convenientId: n }))
       })
       await db.Room_Convenient.bulkCreate(rooms_convenients)
     }
 
     return res.json({
       success: response[0] > 0,
-      mes:
-        response[0] > 0 ? "Cập nhật thành công" : "Cập nhật không thành công.",
+      mes: response[0] > 0 ? "Cập nhật thành công" : "Cập nhật không thành công.",
     })
   }),
   removePost: asyncHandler(async (req, res) => {
     const { id } = req.params
-    const response = await db.Post.update(
-      { isDeleted: true },
-      { where: { id } }
-    )
+    const response = await db.Post.update({ isDeleted: true }, { where: { id } })
     return res.json({
       success: response > 0,
       mes: response > 0 ? "Xóa thành công" : "Xóa không thành công",
